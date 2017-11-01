@@ -1,4 +1,4 @@
-require("./main.css");
+require("../styles/main.css");
 import Typed from 'typed.js';
 import anime from 'animejs'
 
@@ -8,7 +8,7 @@ const ctx = document.getElementById('heart-back').getContext('2d');
 const colors = ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"];
 let hearts = [];
 window.onload = function () {
-  //StartTypeWord();
+  StartTypeWord();
   initHeartWall();
 }
 
@@ -35,21 +35,13 @@ function StartTypeWord() {
 }
 
 function initHeartWall() {
-
-
-
-
   //ctx.width = width;
   //ctx.height = height;
   ctx.canvas.width = width;
   ctx.canvas.height = height;
-
-
   let heartCount = 50;
   
-
   for (let i = 0; i < heartCount; i++) {
-
     let cntrX = anime.random(0, width);
     let cntrY = anime.random(height, height*2);
     let vscale = anime.random(0.5, 2);
@@ -58,7 +50,7 @@ function initHeartWall() {
     heart.draw();
     hearts.push(heart);
   }
-  //render.play();
+
   for(let i=0; i<hearts.length; i++){
     anime({
       targets: hearts[i],
@@ -86,8 +78,7 @@ function drawHeart(ctx, cntrX, cntrY, vscale, color) {
   heart.cntrY = cntrY;
   heart.alpha = .8;
   heart.color = color;
-  heart.draw = function(){
-    
+  heart.draw = function(){   
     ctx.beginPath();
     ctx.moveTo(cntrX, cntrY - getY(0) * vscale);
     for (let i = 0; i < 2 * Math.PI; i = i + d) {

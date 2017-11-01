@@ -8,25 +8,36 @@ const ctx = document.getElementById('heart-back').getContext('2d');
 const colors = ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"];
 let hearts = [];
 window.onload = function () {
+
   StartTypeWord();
   initHeartWall();
+  audioAutoPlay('back-music');
 }
 
 function StartTypeWord() {
 
   let wrep = '<br>^50';
-  let myWords = `Hi! 力文：^1000
+  // let myWords = `Hi! 力文：^1000
+  // ${wrep}
+  // ${wrep}
+  // 好久都没见了
+  // ${wrep}
+  // ${wrep}
+  // 生日快乐
+  // I Love You`;
+
+  let myWords = `Test Test
   ${wrep}
   ${wrep}
-  好久都没见了
+  TestTestTestTestTest TestTestTestTestTestTestTest
   ${wrep}
   ${wrep}
-  生日快乐
-  I Love You`;
+  TestTestTestTestTestTestTest
+  TestTestTestTestTestTestTestTestTestTest`;
 
   let options = {
     strings: [myWords],
-    typeSpeed: 100,
+    typeSpeed: 150,
     loop: true,
     callback: function () { }
   };
@@ -100,6 +111,22 @@ function getX(t) {
 function getY(t) {
   return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
 }
+
+function audioAutoPlay(id){  
+  var audio = document.getElementById(id),  
+      play = function(){  
+          audio.play();  
+          document.removeEventListener("touchstart",play, false);  
+      };  
+  audio.play();  
+  document.addEventListener("WeixinJSBridgeReady", function () {  
+      play();  
+  }, false);  
+  document.addEventListener('YixinJSBridgeReady', function() {  
+      play();  
+  }, false);  
+  document.addEventListener("touchstart",play, false);  
+}  
 
 window.addEventListener('resize', initHeartWall);
 

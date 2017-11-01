@@ -26,19 +26,19 @@ module.exports = {
         test: /\.html$/,
         use: 'html-loader'
       },
-      {
-        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-        }
-      },
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template:  path.join(__dirname, 'src', 'index.html')
+      template:  path.join(__dirname, 'src', 'index.html'),
+      inject: true,
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+      },
+      hash : true
     })
   ],
-  devtool: 'eval-source-map'
+  //devtool: 'eval-source-map'
 }

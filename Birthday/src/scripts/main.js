@@ -10,9 +10,11 @@ const ctx = document.getElementById('heart-back').getContext('2d');
 const colors = ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"];
 let hearts = [];
 window.onload = function () {
-  loadResource();
-  startTypeWord();
-  initHeartWall();
+  loadResource(function(){
+    startTypeWord();
+    initHeartWall();
+  });
+
   // audioAutoPlay('back-music');
 }
 
@@ -115,15 +117,27 @@ function getY(t) {
   return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
 }
 
-function loadResource() {
-  let loadEl = document.getElementById('loading');
+function loadResource(callback) {
+ 
   let backAudio = new Audio(backAudioSrc);
+  let container = document.getElementById('container');
   backAudio.onloadedmetadata=function(){
-    loadEl.style.display = 'none';
+    hideLoading();
+    callback();
+    container.style.display = "";
   }
   
 }
 
+function showLoading(){
+  let loadEl = document.getElementById('loading');
+  loadEl.style.display = 'block';
+}
+
+function hideLoading(){
+  let loadEl = document.getElementById('loading');
+  loadEl.style.display = 'none';
+}
 // function audioAutoPlay(id){  
 //   var audio = document.getElementById(id),  
 //       play = function(){  

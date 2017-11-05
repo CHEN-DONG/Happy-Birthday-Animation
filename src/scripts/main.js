@@ -10,12 +10,61 @@ const ctx = document.getElementById('heart-back').getContext('2d');
 const colors = ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"];
 let hearts = [];
 window.onload = function () {
+  let velas = document.getElementById('velas');
+  velas.addEventListener("webkitAnimationEnd", cakeEndFunction);
+  velas.addEventListener("animationend", cakeEndFunction);
   loadResource(function(){
-    startTypeWord();
-    initHeartWall();
+    document.getElementById('back-music').src = "../assets/831143.mp3";
+    document.getElementById('container').style = 'block';
+    document.getElementById('first-page').style = 'block';
+    audioAutoPlay('back-music');
+    hideLoading();
   });
+}
 
-  // audioAutoPlay('back-music');
+function loadResource(callback) {
+   let backAudio = new Audio(backAudioSrc);
+   backAudio.onloadedmetadata=callback;
+ }
+
+function cakeEndFunction(){
+  let textDom = document.getElementById('text-content');
+
+  var pathEls = textDom.querySelectorAll('path');
+  let firstPageTimeline = anime.timeline();
+  for (var i = 0; i < pathEls.length; i++) {
+    var pathEl = pathEls[i];
+    var offset = anime.setDashoffset(pathEl);
+    pathEl.setAttribute('stroke-dashoffset', offset);
+  }
+  firstPageTimeline
+  .add({
+    targets: '#age-content',
+    opacity: 1,
+    duration: 2000,
+    easing: 'linear'
+  })
+  .add({
+    targets: '#age-content input',
+    value: 22,
+    round: 1,
+    duration: 5000,
+    easing: 'linear'
+  })
+  .add({
+    targets: '#text-content',
+    opacity: 1,
+    duration: 0,
+  })
+  .add({
+    targets: pathEls,
+    strokeDashoffset: [offset, 0],
+    duration: 10000,
+    delay: anime.random(0, 2000),
+    loop: true,
+    direction: 'alternate',
+    easing: 'easeInOutSine',
+  })
 }
 
 function startTypeWord() {
@@ -117,17 +166,6 @@ function getY(t) {
   return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
 }
 
-function loadResource(callback) {
- 
-  let backAudio = new Audio(backAudioSrc);
-  let container = document.getElementById('container');
-  backAudio.onloadedmetadata=function(){
-    hideLoading();
-    callback();
-    container.style.display = "";
-  }
-  
-}
 
 function showLoading(){
   let loadEl = document.getElementById('loading');
@@ -138,23 +176,25 @@ function hideLoading(){
   let loadEl = document.getElementById('loading');
   loadEl.style.display = 'none';
 }
-// function audioAutoPlay(id){  
-//   var audio = document.getElementById(id),  
-//       play = function(){  
-//           audio.play();  
-//           document.removeEventListener("touchstart",play, false);  
-//       };  
-//   audio.play();  
-//   document.addEventListener("WeixinJSBridgeReady", function () {  
-//       play();  
-//   }, false);  
-//   document.addEventListener('YixinJSBridgeReady', function() {  
-//       play();  
-//   }, false);  
-//   document.addEventListener("touchstart",play, false);  
-// }  
+function audioAutoPlay(id){  
+  var audio = document.getElementById(id),  
+      play = function(){  
+          audio.play();  
+          document.removeEventListener("touchstart",play, false);  
+      };  
+  audio.play();  
+  document.addEventListener("WeixinJSBridgeReady", function () {  
+      play();  
+  }, false);  
+  document.addEventListener('YixinJSBridgeReady', function() {  
+      play();  
+  }, false);  
+  document.addEventListener("touchstart",play, false);  
+}  
 
 window.addEventListener('resize', initHeartWall);
+
+
 
 // document.addEventListener(('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown', function(e) {
 //   let cntrX = e.clientX || e.touches[0].clientX;

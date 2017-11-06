@@ -1,5 +1,5 @@
 require("../styles/main.css");
-let backAudioSrc =  require("../assets/831143.mp3");
+let backAudioSrc = require("../assets/831143.mp3");
 let loadingImg = require("../assets/loadingCat.gif")
 import Typed from 'typed.js';
 import anime from 'animejs';
@@ -13,7 +13,7 @@ window.onload = function () {
   let velas = document.getElementById('velas');
   velas.addEventListener("webkitAnimationEnd", cakeEndFunction);
   velas.addEventListener("animationend", cakeEndFunction);
-  loadResource(function(){
+  loadResource(function () {
     document.getElementById('back-music').src = "../assets/831143.mp3";
     document.getElementById('container').style = 'block';
     document.getElementById('first-page').style = 'block';
@@ -22,12 +22,27 @@ window.onload = function () {
   });
 }
 
+document.getElementById('go-on').onclick = function(){
+  document.getElementById('first-page').style.display = "none";
+  document.getElementById('second-page').style.display = "block";
+  initHeartWall();
+  startTypeWord();
+  // anime({
+  //   targets: '#second-page',
+  //   style: {display:"block"},
+  //   duration: 10000,
+  //   complete: function(anim) {
+  //     initHeartWall();
+  //     startTypeWord();
+  //   }
+  // });
+}
 function loadResource(callback) {
-   let backAudio = new Audio(backAudioSrc);
-   backAudio.onloadedmetadata=callback;
- }
+  let backAudio = new Audio(backAudioSrc);
+  backAudio.onloadeddata = callback;
+}
 
-function cakeEndFunction(){
+function cakeEndFunction() {
   let textDom = document.getElementById('text-content');
 
   var pathEls = textDom.querySelectorAll('path');
@@ -37,34 +52,43 @@ function cakeEndFunction(){
     var offset = anime.setDashoffset(pathEl);
     pathEl.setAttribute('stroke-dashoffset', offset);
   }
+  let ageObj = { age: 1 };
   firstPageTimeline
-  .add({
-    targets: '#age-content',
-    opacity: 1,
-    duration: 2000,
-    easing: 'linear'
-  })
-  .add({
-    targets: '#age-content input',
-    value: 22,
-    round: 1,
-    duration: 5000,
-    easing: 'linear'
-  })
-  .add({
-    targets: '#text-content',
-    opacity: 1,
-    duration: 0,
-  })
-  .add({
-    targets: pathEls,
-    strokeDashoffset: [offset, 0],
-    duration: 10000,
-    delay: anime.random(0, 2000),
-    loop: true,
-    direction: 'alternate',
-    easing: 'easeInOutSine',
-  })
+    .add({
+      targets: '#age-content',
+      opacity: 1,
+      duration: 2000,
+      easing: 'linear'
+    })
+    .add({
+      targets: ageObj,
+      age: 22,
+      round: 1,
+      duration: 3000,
+      easing: 'linear',
+      update: function () {
+        var el = document.querySelector('#age-content p');
+        el.innerHTML = ageObj.age;
+      }
+    })
+    .add({
+      targets: '#text-content',
+      opacity: 1,
+      duration: 200,
+    })
+    .add({
+      targets: pathEls,
+      strokeDashoffset: [offset, 0],
+      duration: 3000,
+      direction: 'alternate',
+      easing: 'linear',
+    })
+    .add({
+      targets: '#go-on',
+      translateX: -200,
+      duration: 2000,
+    })
+
 }
 
 function startTypeWord() {
@@ -100,15 +124,13 @@ function startTypeWord() {
 }
 
 function initHeartWall() {
-  //ctx.width = width;
-  //ctx.height = height;
   ctx.canvas.width = width;
   ctx.canvas.height = height;
-  let heartCount = 50;
-  
+  let heartCount = 35;
+
   for (let i = 0; i < heartCount; i++) {
     let cntrX = anime.random(0, width);
-    let cntrY = anime.random(height, height*2);
+    let cntrY = anime.random(height, height * 2);
     let vscale = anime.random(0.5, 2);
     let color = colors[anime.random(0, colors.length)];
     let heart = drawHeart(ctx, cntrX, cntrY, vscale, color);
@@ -116,24 +138,24 @@ function initHeartWall() {
     hearts.push(heart);
   }
 
-  for(let i=0; i<hearts.length; i++){
+  for (let i = 0; i < hearts.length; i++) {
     anime({
       targets: hearts[i],
-      cntrY: function(p) { return p.cntrY-height; },
-      update: function (anim){
+      cntrY: function (p) { return p.cntrY - height; },
+      update: function (anim) {
         for (var i = 0; i < anim.animatables.length; i++) {
           anim.animatables[i].target.draw();
         }
       },
-      duration: anime.random(10000,20000),
+      duration: anime.random(10000, 20000),
       loop: true,
     });
   }
 }
 anime({
   duration: Infinity,
-  update: function() {
-   ctx.clearRect(0, 0, width, height);
+  update: function () {
+    ctx.clearRect(0, 0, width, height);
   }
 });
 function drawHeart(ctx, cntrX, cntrY, vscale, color) {
@@ -143,7 +165,7 @@ function drawHeart(ctx, cntrX, cntrY, vscale, color) {
   heart.cntrY = cntrY;
   heart.alpha = .8;
   heart.color = color;
-  heart.draw = function(){     
+  heart.draw = function () {
     ctx.beginPath();
     ctx.moveTo(cntrX, cntrY - getY(0) * vscale);
     for (let i = 0; i < 2 * Math.PI; i = i + d) {
@@ -167,30 +189,30 @@ function getY(t) {
 }
 
 
-function showLoading(){
+function showLoading() {
   let loadEl = document.getElementById('loading');
   loadEl.style.display = 'block';
 }
 
-function hideLoading(){
+function hideLoading() {
   let loadEl = document.getElementById('loading');
   loadEl.style.display = 'none';
 }
-function audioAutoPlay(id){  
-  var audio = document.getElementById(id),  
-      play = function(){  
-          audio.play();  
-          document.removeEventListener("touchstart",play, false);  
-      };  
-  audio.play();  
-  document.addEventListener("WeixinJSBridgeReady", function () {  
-      play();  
-  }, false);  
-  document.addEventListener('YixinJSBridgeReady', function() {  
-      play();  
-  }, false);  
-  document.addEventListener("touchstart",play, false);  
-}  
+function audioAutoPlay(id) {
+  var audio = document.getElementById(id),
+    play = function () {
+      audio.play();
+      document.removeEventListener("touchstart", play, false);
+    };
+  audio.play();
+  document.addEventListener("WeixinJSBridgeReady", function () {
+    play();
+  }, false);
+  document.addEventListener('YixinJSBridgeReady', function () {
+    play();
+  }, false);
+  document.addEventListener("touchstart", play, false);
+}
 
 window.addEventListener('resize', initHeartWall);
 

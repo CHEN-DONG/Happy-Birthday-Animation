@@ -1,6 +1,5 @@
 require("../styles/main.css");
-let backAudioSrc = require("../assets/831143.mp3");
-let loadingImg = require("../assets/loadingCat.gif")
+const loadingImg = require("../assets/loadingCat.gif");
 import Typed from 'typed.js';
 import anime from 'animejs';
 
@@ -10,36 +9,24 @@ const ctx = document.getElementById('heart-back').getContext('2d');
 const colors = ["#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0", "#42A5F5", "#29B6F6", "#26C6DA", "#26A69A", "#66BB6A", "#9CCC65", "#D4E157", "#FFEE58", "#FFCA28", "#FFA726", "#FF7043", "#8D6E63", "#BDBDBD", "#78909C"];
 let hearts = [];
 window.onload = function () {
+  let audio = document.getElementById('back-music');
+  audio.oncanplay = getStart();
+}
+
+function getStart() {
   let velas = document.getElementById('velas');
   velas.addEventListener("webkitAnimationEnd", cakeEndFunction);
   velas.addEventListener("animationend", cakeEndFunction);
-  loadResource(function () {
-    document.getElementById('back-music').src = "../assets/831143.mp3";
-    document.getElementById('container').style = 'block';
-    document.getElementById('first-page').style = 'block';
-    audioAutoPlay('back-music');
-    hideLoading();
-  });
+  document.getElementById('container').style.display = 'block';
+  document.getElementById('first-page').style.display = 'block';
+  hideLoading();
 }
 
-document.getElementById('go-on').onclick = function(){
+document.getElementById('go-on').onclick = function () {
   document.getElementById('first-page').style.display = "none";
   document.getElementById('second-page').style.display = "block";
   initHeartWall();
   startTypeWord();
-  // anime({
-  //   targets: '#second-page',
-  //   style: {display:"block"},
-  //   duration: 10000,
-  //   complete: function(anim) {
-  //     initHeartWall();
-  //     startTypeWord();
-  //   }
-  // });
-}
-function loadResource(callback) {
-  let backAudio = new Audio(backAudioSrc);
-  backAudio.onloadeddata = callback;
 }
 
 function cakeEndFunction() {
@@ -74,18 +61,18 @@ function cakeEndFunction() {
     .add({
       targets: '#text-content',
       opacity: 1,
-      duration: 200,
+      duration: 300,
     })
     .add({
       targets: pathEls,
       strokeDashoffset: [offset, 0],
       duration: 3000,
-      direction: 'alternate',
+      delay: 300,
       easing: 'linear',
     })
     .add({
       targets: '#go-on',
-      translateX: -200,
+      translateX: -150,
       duration: 2000,
     })
 
@@ -198,27 +185,10 @@ function hideLoading() {
   let loadEl = document.getElementById('loading');
   loadEl.style.display = 'none';
 }
-function audioAutoPlay(id) {
-  var audio = document.getElementById(id),
-    play = function () {
-      audio.play();
-      document.removeEventListener("touchstart", play, false);
-    };
-  audio.play();
-  document.addEventListener("WeixinJSBridgeReady", function () {
-    play();
-  }, false);
-  document.addEventListener('YixinJSBridgeReady', function () {
-    play();
-  }, false);
-  document.addEventListener("touchstart", play, false);
-}
 
 window.addEventListener('resize', initHeartWall);
 
-
-
-// document.addEventListener(('ontouchstart' in window || navigator.msMaxTouchPoints) ? 'touchstart' : 'mousedown', function(e) {
-//   let cntrX = e.clientX || e.touches[0].clientX;
-//   let cntrY = e.clientY || e.touches[0].clientY;
-// }, false);
+document.addEventListener("WeixinJSBridgeReady",function(){
+  let audio = document.getElementById('back-music');
+  audio.play();
+},false);

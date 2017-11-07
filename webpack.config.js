@@ -54,9 +54,6 @@ module.exports = {
       template:  path.join(__dirname, 'src', 'index.html'),
       inject: true,
       minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
       },
       hash : true
     }),
